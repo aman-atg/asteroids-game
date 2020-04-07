@@ -1,45 +1,41 @@
-let ship1;
-let H_width, H_height;
+const SHIP_SIZE = 30;
+
 function setup() {
   createCanvas(1280, 650);
   H_width = width / 2;
   H_height = height / 2;
+  ship = {
+    x: H_width,
+    y: H_height,
+    r: SHIP_SIZE / 2,
+    a: (90 / 180) * PI,
+  };
 }
-// a single point class
-//!  funcs :- show
-class Point {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-  show() {
-    return [this.x, this.y];
-  }
-}
-// Ship class to create our ship
-// ! funcs :-
-class Ship {
-  constructor(x1, x2, y1, y2, z1, z2) {
-    this.x1 = H_width;
-    this.x2 = height / 2;
-  }
-}
+
+var ship;
+
+const fps = 30; //not needed maybe
 
 function draw() {
   background(0);
-  ship1 = new Ship();
   noFill();
   strokeWeight(1);
   stroke(255);
-  translate(width / 2, height / 2);
-  rotate(PI / 3.0);
-  triangle(
-    width / 2,
-    height / 2,
-    width / 2 - 20,
-    height / 2 + 30,
-    width / 2 + 20,
-    height / 2 + 30
+  //drawing ship
+  beginShape();
+  //nose of the ship
+  vertex(ship.x + ship.r * cos(ship.a), ship.y - ship.r * sin(ship.a));
+  // rear left
+  vertex(
+    ship.x - ship.r * (cos(ship.a) + sin(ship.a)),
+    ship.y + ship.r * (sin(ship.a) - cos(ship.a))
   );
-  // print(23);
+  // rear right
+
+  vertex(
+    ship.x - ship.r * (cos(ship.a) - sin(ship.a)),
+    ship.y + ship.r * (sin(ship.a) + cos(ship.a))
+  );
+
+  endShape(CLOSE);
 }
