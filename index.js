@@ -22,20 +22,13 @@ function draw() {
   strokeWeight(1);
   stroke(255);
   //drawing ship
-  beginShape();
-  //nose of the ship
-  vertex(ship.x + ship.r * cos(ship.a), ship.y - ship.r * sin(ship.a));
-  // rear left
-  vertex(
+  triangle(
+    ship.x + ship.r * cos(ship.a),
+    ship.y - ship.r * sin(ship.a),
     ship.x - ship.r * (cos(ship.a) + sin(ship.a)),
-    ship.y + ship.r * (sin(ship.a) - cos(ship.a))
-  );
-  // rear right
-
-  vertex(
+    ship.y + ship.r * (sin(ship.a) - cos(ship.a)),
     ship.x - ship.r * (cos(ship.a) - sin(ship.a)),
     ship.y + ship.r * (sin(ship.a) + cos(ship.a))
   );
-
-  endShape(CLOSE);
+  ship.a += 1 / fps;
 }
