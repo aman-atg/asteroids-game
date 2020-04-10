@@ -38,7 +38,8 @@ function keyReleased() {
 const createAsteroidBelt = () => {
   var x, y;
   for (var i = 0; i < ASTEROIDS_NUM; i++) {
-    (x = floor(random() * width)), (y = floor(random() * height));
+    x = floor(random() * width);
+    y = floor(random() * height);
     roids.push(newAestroid(x, y));
   }
 };
@@ -51,6 +52,7 @@ const newAestroid = (x, y) => {
     xy: ((random() * ROIDS_SPD) / FPS) * random() < 0.5 ? 1 : -1,
     r: ROIDS_SIZE / 2,
     a: random() * PI * 2,
+    vert: random() * ROIDS_VERT + 1 + ROIDS_VERT / 2,
   };
   return roid;
 };
@@ -91,4 +93,25 @@ const drawThruster = () => {
   );
 
   pop(); //remove all styling
+};
+
+// ====== DRAW ASTEROIDS =======
+const drawAsteroids = () => {
+  push();
+  strokeWeight(SHIP_SIZE / 20);
+  stroke("slategrey");
+
+  roids.map((roid) => {
+    const { x, y, r, a, vert } = roid;
+    // draw polygon
+    beginShape();
+    vertex(x + r * cos(a), y + r * sin(a));
+    for (var j = 1; j < vert; j++) {
+      vertex(
+        x + r * cos(a + (j * PI * 2) / vert),
+        y + r * sin(a + (j * PI * 2) / vert)
+      );
+    }
+    endShape(CLOSE);
+  });
 };
