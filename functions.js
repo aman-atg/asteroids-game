@@ -34,7 +34,28 @@ function keyReleased() {
   if (keyCode === 38) ship.thrusting = false;
 }
 
-// ================== >> DRAWING FUNCTIONS << ==================    
+// ======= CREATE ASTROID-BELT =======
+const createAsteroidBelt = () => {
+  var x, y;
+  for (var i = 0; i < ASTEROIDS_NUM; i++) {
+    (x = floor(random() * width)), (y = floor(random() * height));
+    roids.push(newAestroid(x, y));
+  }
+};
+// ====== CREATE ONE ASTROID =====
+const newAestroid = (x, y) => {
+  var roid = {
+    x,
+    y,
+    xv: ((random() * ROIDS_SPD) / FPS) * random() < 0.5 ? 1 : -1,
+    xy: ((random() * ROIDS_SPD) / FPS) * random() < 0.5 ? 1 : -1,
+    r: ROIDS_SIZE / 2,
+    a: random() * PI * 2,
+  };
+  return roid;
+};
+
+// ================== >> DRAWING FUNCTIONS << ==================
 
 // ====== DRAW AIRSHIP ======
 const drawAirship = () => {
