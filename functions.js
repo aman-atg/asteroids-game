@@ -38,25 +38,59 @@ function keyReleased() {
 const createAsteroidBelt = () => {
   var x, y;
   for (var i = 0; i < ASTEROIDS_NUM; i++) {
-    x = floor(random() * width);
-    y = floor(random() * height);
-    roids.push(newAestroid(x, y));
+    do {
+      x = floor(random() * width);
+      y = floor(random() * height);
+    } while (dist(ship.x, ship.y, x, y) < ROIDS_SIZE * 2 + ship.r); // asteroids should not overlap with our ship on inital setup
+
+    roids.push(newAsteroid(x, y));
   }
 };
 // ====== CREATE ONE ASTROID =====
-const newAestroid = (x, y) => {
+const newAsteroid = (x, y) => {
   var roid = {
     x,
     y,
-    xv: ((random() * ROIDS_SPD) / FPS) * random() < 0.5 ? 1 : -1,
-    xy: ((random() * ROIDS_SPD) / FPS) * random() < 0.5 ? 1 : -1,
+    xv: (random(ROIDS_SPD) / FPS) * (random() < 0.5 ? 1 : -1),
+    yv: (random(ROIDS_SPD) / FPS) * (random() < 0.5 ? 1 : -1),
     r: ROIDS_SIZE / 2,
-    a: random() * PI * 2,
-    vert: random() * ROIDS_VERT + 1 + ROIDS_VERT / 2,
+    a: random(PI * 2),
+    vert: random(ROIDS_VERT) + 1 + ROIDS_VERT / 2,
+    offs: [],
   };
+  // create vertex offsets array
+  for (var i = 0; i < roid.vert; i++) {
+    roid.offs.push(random(ROIDS_JAG * 2) + 1 - ROIDS_JAG);
+  }
   return roid;
 };
 
+// ======= MOVE ASTEROIDS =========
+const moveAsteroids = (roid) => {
+  var { xv, yv, x, y, r } = roid;
+
+  roid.x += xv;
+  roid.y += yv;
+  // handle edge of screen
+  // x-dir
+  if (x < 0 - r) {
+    roid.x = width + r;
+  } else if (x > width + r) {
+    roid.x = 0 - r;
+  }
+  // y-dir
+  if (y < 0 - r) {
+    roid.y = height + r;
+  } else if (y > height + r) {
+    roid.y = 0 - r;
+  }
+  //   print(random(52));
+};
+
+// ======= HANDLE ASTEROIDS =========
+const handleAsteroids = () => {
+  drawAsteroids();
+};
 // ================== >> DRAWING FUNCTIONS << ==================
 
 // ====== DRAW AIRSHIP ======
@@ -102,16 +136,22 @@ const drawAsteroids = () => {
   stroke("slategrey");
 
   roids.map((roid) => {
-    const { x, y, r, a, vert } = roid;
+    // getting all variables from roid
+    const { x, y, r, a, vert, offs } = roid;
+
     // draw polygon
     beginShape();
-    vertex(x + r * cos(a), y + r * sin(a));
+    vertex(x + r * offs[0] * cos(a), y + r * sin(a));
     for (var j = 1; j < vert; j++) {
       vertex(
-        x + r * cos(a + (j * PI * 2) / vert),
-        y + r * sin(a + (j * PI * 2) / vert)
+        x + r * offs[j] * cos(a + (j * PI * 2) / vert),
+        y + r * offs[j] * sin(a + (j * PI * 2) / vert)
       );
     }
     endShape(CLOSE);
+
+    // move 'em
+    moveAsteroids(roid);
   });
+  pop();
 };
