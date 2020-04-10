@@ -9,7 +9,7 @@ function setup() {
   H_height = height / 2;
   ship = newAirship();
   createAsteroidBelt();
-  
+
 }
 
 function draw() {
@@ -46,8 +46,8 @@ function draw() {
   ship.x += x;
   ship.y += y;
   
-  // draw asteroids
-  drawAsteroids();
+  // Asteroids
+  handleAsteroids();
   
   //if keyIsPressed then call a func. to do something about it
   if (keyIsPressed) checkKeys();
