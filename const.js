@@ -1,6 +1,7 @@
 const ASTEROIDS_NUM = 5;
 const FPS = 100;
 const FRICTION = 0.7;
+const LASER_DIST = 0.6;
 const LASER_MAX = 10;
 const LASER_SPD = 500;
 const ROIDS_JAG = 0.335;
