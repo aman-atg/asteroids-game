@@ -48,6 +48,7 @@ const shootLaser = () => {
       xv: (LASER_SPD * cos(ship.a)) / FPS,
       yv: -(LASER_SPD * sin(ship.a)) / FPS,
       dist: 0,
+      explodeTime: 0,
     });
   }
   ship.canShoot = false;
@@ -85,15 +86,32 @@ const destruction = () => {
 
     // lasers
     ship.lasers.map((laser) => {
-      if (dist(laser.x, laser.y, x, y) < r) {
-        removeLaser(laser);
-        roids = roids.filter((r) => r != roid);
+      if (laser.explodeTime == 0 && dist(laser.x, laser.y, x, y) < r) {
+        destroyAsteroid(roid);
+        laser.explodeTime = ceil(LASER_EXPLODE_DUR * FPS);
       }
     });
   });
 };
 const removeLaser = (laser) => {
   ship.lasers = ship.lasers.filter((l) => l != laser);
+};
+
+// ====== DESTROY ASTEROIDS =======
+const destroyAsteroid = (roid) => {
+  var { x, y, r } = roid;
+  const R = ROIDS_SIZE / 2;
+
+  // split the asteroid in two
+  if (r === ceil(R)) {
+    roids.push(newAsteroid(x, y, ceil(R / 2)));
+    roids.push(newAsteroid(x, y, ceil(R / 2)));
+  } else if (r === ceil(R / 2)) {
+    roids.push(newAsteroid(x, y, ceil(R / 4)));
+    roids.push(newAsteroid(x, y, ceil(R / 4)));
+  }
+  // destory it
+  roids = roids.filter((r) => r != roid);
 };
 
 // =========== KEY-CONTROLS ============
@@ -134,17 +152,17 @@ const createAsteroidBelt = () => {
       y = floor(random() * height);
     } while (dist(ship.x, ship.y, x, y) < ROIDS_SIZE * 2 + ship.r); // asteroids should not overlap with our ship on inital setup
 
-    roids.push(newAsteroid(x, y));
+    roids.push(newAsteroid(x, y, ceil(ROIDS_SIZE / 2)));
   }
 };
 // ====== CREATE ONE ASTROID =====
-const newAsteroid = (x, y) => {
+const newAsteroid = (x, y, r) => {
   var roid = {
     x,
     y,
     xv: (random(ROIDS_SPD) / FPS) * (random() < 0.5 ? 1 : -1),
     yv: (random(ROIDS_SPD) / FPS) * (random() < 0.5 ? 1 : -1),
-    r: ROIDS_SIZE / 2,
+    r,
     a: random(PI * 2),
     vert: random(ROIDS_VERT) + 1 + ROIDS_VERT / 2,
     offs: [],
@@ -175,7 +193,6 @@ const moveAsteroids = (roid) => {
   } else if (y > height + r) {
     roid.y = 0 - r;
   }
-  //   print(random(52));
 };
 
 // ======= HANDLE ASTEROIDS =========
@@ -222,17 +239,39 @@ const drawThruster = () => {
 // ====== DRAW LASER =======
 const drawLasers = () => {
   push();
-  // stroke("salmon");
   fill("salmon");
 
   ship.lasers.map((laser) => {
-    const { x, y, dist } = laser;
+    const { x, y } = laser;
 
-    circle(x, y, SHIP_SIZE / 15);
+    if (laser.explodeTime > 0) {
+      laser.explodeTime--;
+      laserExplosion(laser);
+      if (laser.explodeTime == 0) removeLaser(laser);
+    } else {
+      circle(x, y, SHIP_SIZE / 15);
+      moveLasers(laser);
+    }
 
-    moveLasers(laser);
     destruction();
   });
+  pop();
+};
+
+// ====== LASER-EXPLOSION =======
+
+const laserExplosion = (laser) => {
+  const { x, y } = laser;
+  const { r } = ship;
+  push();
+  noStroke();
+  fill("orangered");
+  circle(x, y, r * 1.75);
+  fill("salmon");
+  circle(x, y, r * 1.15);
+  fill("pink");
+  circle(x, y, r * .75);
+
   pop();
 };
 
@@ -283,8 +322,11 @@ const drawAsteroids = (exploding) => {
       dist(x, y, ship.x, ship.y) < ship.r + r &&
       !exploding &&
       ship.blinkNum == 0
-    )
+    ) {
       explodeShip();
+      destroyAsteroid(roid);
+      exploding = true;
+    }
 
     // move 'em
     moveAsteroids(roid);
