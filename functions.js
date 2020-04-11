@@ -4,6 +4,7 @@ const newAirship = () => ({
   y: H_height,
   r: SHIP_SIZE / 2,
   a: (90 / 180) * PI,
+  explodeTime: 0,
   rot: 0,
   thrusting: false,
   thrust: {
@@ -11,6 +12,10 @@ const newAirship = () => ({
     y: 0,
   },
 });
+
+const explodeShip = () => {
+  ship.explodeTime = ceil(SHIP_EXPLODE_DUR * FPS);
+};
 
 // =========== KEY-CONTROLS ============
 function checkKeys() {
@@ -125,8 +130,28 @@ const drawThruster = () => {
     ship.x - ship.r * ((2 / 3) * cos(ship.a) - 0.5 * sin(ship.a)),
     ship.y + ship.r * ((2 / 3) * sin(ship.a) + 0.5 * cos(ship.a))
   );
-
   pop(); //remove all styling
+};
+
+// ====== DRAW EXPLOSION =======
+
+const drawExplosion = () => {
+  const { x, y, r } = ship;
+  push();
+  noStroke();
+
+  fill("darkred");
+  circle(x, y, r *2.5);
+  fill("red");
+  circle(x, y, r * 1.9);
+  fill("orange");
+  circle(x, y, r * 1.4);
+  fill("yellow");
+  circle(x, y, r *.9);
+  fill("white");
+  circle(x, y, r * 0.5);
+
+  pop();
 };
 
 // ====== DRAW ASTEROIDS =======
@@ -149,6 +174,9 @@ const drawAsteroids = () => {
       );
     }
     endShape(CLOSE);
+
+    //
+    if (dist(x, y, ship.x, ship.y) < ship.r + r) explodeShip();
 
     // move 'em
     moveAsteroids(roid);
