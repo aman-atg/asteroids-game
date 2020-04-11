@@ -49,5 +49,5 @@ function draw() {
   handleAsteroids(exploding);
 
   drawLasers();
-  if (keyIsPressed) checkKeys();
+  if (keyIsPressed && !exploding) checkKeys();
 }
