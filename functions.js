@@ -4,7 +4,11 @@ const newAirship = () => ({
   y: H_height,
   r: SHIP_SIZE / 2,
   a: (90 / 180) * PI,
+  blinkNum: SHIP_INV_DUR / SHIP_BLINK_DUR,
+  blinkTime: ceil(SHIP_BLINK_DUR * FPS),
+  canShoot: true,
   explodeTime: 0,
+  lasers: [],
   rot: 0,
   thrusting: false,
   thrust: {
@@ -14,27 +18,55 @@ const newAirship = () => ({
 });
 
 // ======== MOVE SHIP =========
-const moveShip = () =>{
+const moveShip = () => {
   // handle edges of the screen
-if (ship.x < 0 - ship.r) ship.x = width + ship.r;
-else if (ship.x > width + ship.r) ship.x = 0 - ship.r;
-if (ship.y < 0 - ship.r) ship.y = height + ship.r;
-else if (ship.y > height + ship.r) ship.y = 0 - ship.r;
+  if (ship.x < 0 - ship.r) ship.x = width + ship.r;
+  else if (ship.x > width + ship.r) ship.x = 0 - ship.r;
+  if (ship.y < 0 - ship.r) ship.y = height + ship.r;
+  else if (ship.y > height + ship.r) ship.y = 0 - ship.r;
 
-// rotate the ship
-ship.a += ship.rot;
+  // rotate the ship
+  ship.a += ship.rot;
 
-// move the ship
-const { x, y } = ship.thrust;
-ship.x += x;
-ship.y += y;
-}
-
+  // move the ship
+  const { x, y } = ship.thrust;
+  ship.x += x;
+  ship.y += y;
+};
 
 // ====== EXPLODE THE SHIP =======
 const explodeShip = () => {
-  ship.explodeTime = ceil(SHIP_EXPLODE_DUR / 1.5);
+  ship.explodeTime = ceil(SHIP_EXPLODE_DUR * FPS);
 };
+
+// ====== SHOOT LASERS =======
+const shootLaser = () => {
+  if (ship.canShoot && ship.lasers.length < LASER_MAX) {
+    ship.lasers.push({
+      x: ship.x + (4 / 3) * ship.r * cos(ship.a),
+      y: ship.y - (4 / 3) * ship.r * sin(ship.a),
+      xv: (LASER_SPD * cos(ship.a)) / FPS,
+      yv: -(LASER_SPD * sin(ship.a)) / FPS,
+    });
+  }
+  ship.canShoot = false;
+};
+
+// ====== MOVE LASERS =======
+const moveLasers = (laser) => {
+  const { x, y, xv, yv } = laser;
+  laser.x += xv;
+  laser.y += yv;
+  
+  // handle edge of screen
+  if(x<0)laser.x = width;
+  else if(x>width)laser.x=0;
+  if(y<0)laser.y=height;
+  else if(y>height)laser.y=0;
+
+};
+
+  
 
 // =========== KEY-CONTROLS ============
 function checkKeys() {
@@ -45,8 +77,11 @@ function checkKeys() {
     ship.rot = ((-TURN_SPEED / 180) * PI) / FPS;
   }
   // thrust
-  else if (keyIsDown(UP_ARROW)) {
+  if (keyIsDown(UP_ARROW)) {
     ship.thrusting = true;
+  } 
+  if ((key = " ")) {
+    shootLaser();
   }
 }
 
@@ -56,6 +91,8 @@ function keyReleased() {
   if (keyCode === 37 || keyCode === 39) ship.rot = 0;
   //when up is released, thrust should be 0
   if (keyCode === 38) ship.thrusting = false;
+
+  if ((keyCode=== 32)) ship.canShoot = true;
 }
 
 // ======= CREATE ASTROID-BELT =======
@@ -152,6 +189,20 @@ const drawThruster = () => {
   pop(); //remove all styling
 };
 
+// ====== DRAW LASER =======
+const drawLasers = () => {
+  push();
+  // stroke("salmon");
+  fill("salmon");
+
+  ship.lasers.map((laser) => {
+    const { x, y } = laser;
+    circle(x, y, SHIP_SIZE / 15);
+    moveLasers(laser);
+  });
+  pop();
+};
+
 // ====== DRAW EXPLOSION =======
 
 const drawExplosion = () => {
@@ -195,7 +246,12 @@ const drawAsteroids = (exploding) => {
     endShape(CLOSE);
 
     //
-    if (dist(x, y, ship.x, ship.y) < ship.r + r && !exploding) explodeShip();
+    if (
+      dist(x, y, ship.x, ship.y) < ship.r + r &&
+      !exploding &&
+      ship.blinkNum == 0
+    )
+      explodeShip();
 
     // move 'em
     moveAsteroids(roid);
