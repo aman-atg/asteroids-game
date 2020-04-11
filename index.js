@@ -1,5 +1,6 @@
 // SHIP
 var ship;
+
 // set up aestroids
 var roids = [];
 
@@ -9,18 +10,17 @@ function setup() {
   H_height = height / 2;
   ship = newAirship();
   createAsteroidBelt();
-
 }
 
 function draw() {
+  var exploding = ship.explodeTime > 0;
   background(0);
   noFill();
   strokeWeight(1.5);
   stroke(255);
 
   if (ship.thrusting) {
-    // draw the thruster
-   drawThruster();
+    drawThruster();
 
     ship.thrust.x += (SHIP_THRUST * cos(ship.a)) / FPS;
     ship.thrust.y -= (SHIP_THRUST * sin(ship.a)) / FPS;
@@ -28,11 +28,12 @@ function draw() {
     ship.thrust.x -= (FRICTION * ship.thrust.x) / FPS;
     ship.thrust.y -= (FRICTION * ship.thrust.y) / FPS;
   }
+  if (!exploding) drawAirship();
+  else {
+    drawExplosion();
+  }
 
-  // drawing ship
-  drawAirship();
-
-  //   
+  // handle edges of the screen
   if (ship.x < 0 - ship.r) ship.x = width + ship.r;
   else if (ship.x > width + ship.r) ship.x = 0 - ship.r;
   if (ship.y < 0 - ship.r) ship.y = height + ship.r;
@@ -45,10 +46,8 @@ function draw() {
   const { x, y } = ship.thrust;
   ship.x += x;
   ship.y += y;
-  
-  // Asteroids
+
   handleAsteroids();
-  
-  //if keyIsPressed then call a func. to do something about it
+
   if (keyIsPressed) checkKeys();
 }
