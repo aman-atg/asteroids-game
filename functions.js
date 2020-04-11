@@ -47,6 +47,7 @@ const shootLaser = () => {
       y: ship.y - (4 / 3) * ship.r * sin(ship.a),
       xv: (LASER_SPD * cos(ship.a)) / FPS,
       yv: -(LASER_SPD * sin(ship.a)) / FPS,
+      dist: 0,
     });
   }
   ship.canShoot = false;
@@ -54,19 +55,26 @@ const shootLaser = () => {
 
 // ====== MOVE LASERS =======
 const moveLasers = (laser) => {
-  const { x, y, xv, yv } = laser;
+  const { x, y, xv, yv, dist } = laser;
+
+  // remove lasers after travelling a certain distance
+  if (dist > LASER_DIST * width) {
+    ship.lasers = ship.lasers.filter((l) => l != laser);
+  }
+
+  // ship.lasers.pop(laser);
   laser.x += xv;
   laser.y += yv;
-  
+
+  // dist travelled
+  laser.dist += sqrt(pow(xv, 2) + pow(yv, 2));
+
   // handle edge of screen
-  if(x<0)laser.x = width;
-  else if(x>width)laser.x=0;
-  if(y<0)laser.y=height;
-  else if(y>height)laser.y=0;
-
+  if (x < 0) laser.x = width;
+  else if (x > width) laser.x = 0;
+  if (y < 0) laser.y = height;
+  else if (y > height) laser.y = 0;
 };
-
-  
 
 // =========== KEY-CONTROLS ============
 function checkKeys() {
@@ -79,7 +87,8 @@ function checkKeys() {
   // thrust
   if (keyIsDown(UP_ARROW)) {
     ship.thrusting = true;
-  } 
+  }
+  // for simultaneously shooting while moving
   if ((key = " ")) {
     shootLaser();
   }
@@ -92,7 +101,7 @@ function keyReleased() {
   //when up is released, thrust should be 0
   if (keyCode === 38) ship.thrusting = false;
 
-  if ((keyCode=== 32)) ship.canShoot = true;
+  if (keyCode === 32) ship.canShoot = true;
 }
 
 // ======= CREATE ASTROID-BELT =======
@@ -196,8 +205,10 @@ const drawLasers = () => {
   fill("salmon");
 
   ship.lasers.map((laser) => {
-    const { x, y } = laser;
+    const { x, y, dist } = laser;
+
     circle(x, y, SHIP_SIZE / 15);
+
     moveLasers(laser);
   });
   pop();
