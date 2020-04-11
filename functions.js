@@ -13,8 +13,27 @@ const newAirship = () => ({
   },
 });
 
+// ======== MOVE SHIP =========
+const moveShip = () =>{
+  // handle edges of the screen
+if (ship.x < 0 - ship.r) ship.x = width + ship.r;
+else if (ship.x > width + ship.r) ship.x = 0 - ship.r;
+if (ship.y < 0 - ship.r) ship.y = height + ship.r;
+else if (ship.y > height + ship.r) ship.y = 0 - ship.r;
+
+// rotate the ship
+ship.a += ship.rot;
+
+// move the ship
+const { x, y } = ship.thrust;
+ship.x += x;
+ship.y += y;
+}
+
+
+// ====== EXPLODE THE SHIP =======
 const explodeShip = () => {
-  ship.explodeTime = ceil(SHIP_EXPLODE_DUR * FPS);
+  ship.explodeTime = ceil(SHIP_EXPLODE_DUR / 1.5);
 };
 
 // =========== KEY-CONTROLS ============
@@ -93,8 +112,8 @@ const moveAsteroids = (roid) => {
 };
 
 // ======= HANDLE ASTEROIDS =========
-const handleAsteroids = () => {
-  drawAsteroids();
+const handleAsteroids = (e) => {
+  drawAsteroids(e);
 };
 // ================== >> DRAWING FUNCTIONS << ==================
 
@@ -141,21 +160,21 @@ const drawExplosion = () => {
   noStroke();
 
   fill("darkred");
-  circle(x, y, r *3.9);
+  circle(x, y, r * 3.9);
   fill("red");
   circle(x, y, r * 3.6);
   fill("orange");
   circle(x, y, r * 2.2);
   fill("yellow");
-  circle(x, y, r *1.6);
+  circle(x, y, r * 1.6);
   fill("white");
-  circle(x, y, r * .7);
+  circle(x, y, r * 0.7);
 
   pop();
 };
 
 // ====== DRAW ASTEROIDS =======
-const drawAsteroids = () => {
+const drawAsteroids = (exploding) => {
   push();
   strokeWeight(SHIP_SIZE / 20);
   stroke("slategrey");
@@ -176,7 +195,7 @@ const drawAsteroids = () => {
     endShape(CLOSE);
 
     //
-    if (dist(x, y, ship.x, ship.y) < ship.r + r) explodeShip();
+    if (dist(x, y, ship.x, ship.y) < ship.r + r && !exploding) explodeShip();
 
     // move 'em
     moveAsteroids(roid);
