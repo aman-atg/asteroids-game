@@ -141,15 +141,15 @@ const drawExplosion = () => {
   noStroke();
 
   fill("darkred");
-  circle(x, y, r *2.5);
+  circle(x, y, r *3.9);
   fill("red");
-  circle(x, y, r * 1.9);
+  circle(x, y, r * 3.6);
   fill("orange");
-  circle(x, y, r * 1.4);
+  circle(x, y, r * 2.2);
   fill("yellow");
-  circle(x, y, r *.9);
+  circle(x, y, r *1.6);
   fill("white");
-  circle(x, y, r * 0.5);
+  circle(x, y, r * .7);
 
   pop();
 };
