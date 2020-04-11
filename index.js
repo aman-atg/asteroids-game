@@ -14,13 +14,14 @@ function setup() {
 
 function draw() {
   var exploding = ship.explodeTime > 0;
+  var blinking = ship.blinkNum % 2 == 0;
   background(0);
   noFill();
   strokeWeight(1.5);
   stroke(255);
 
   if (ship.thrusting) {
-    drawThruster();
+    if (blinking) drawThruster();
 
     ship.thrust.x += (SHIP_THRUST * cos(ship.a)) / FPS;
     ship.thrust.y -= (SHIP_THRUST * sin(ship.a)) / FPS;
@@ -29,16 +30,24 @@ function draw() {
     ship.thrust.y -= (FRICTION * ship.thrust.y) / FPS;
   }
   if (!exploding) {
-    drawAirship();
+    if (blinking) drawAirship();
     moveShip();
   } else {
     drawExplosion();
   }
+  if (ship.blinkNum > 0) {
+    ship.blinkTime--;
+    if (ship.blinkTime == 0) {
+      ship.blinkTime = ceil(SHIP_BLINK_DUR * FPS);
+      ship.blinkNum--;
+    }
+  }
+
   ship.explodeTime--;
-  if(ship.explodeTime==0)
-    ship = newAirship();
+  if (ship.explodeTime == 0) ship = newAirship();
 
   handleAsteroids(exploding);
 
+  drawLasers();
   if (keyIsPressed) checkKeys();
 }
