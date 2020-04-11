@@ -59,7 +59,8 @@ const moveLasers = (laser) => {
 
   // remove lasers after travelling a certain distance
   if (dist > LASER_DIST * width) {
-    ship.lasers = ship.lasers.filter((l) => l != laser);
+    removeLaser(laser);
+    return;
   }
 
   // ship.lasers.pop(laser);
@@ -76,6 +77,25 @@ const moveLasers = (laser) => {
   else if (y > height) laser.y = 0;
 };
 
+// ====== DESTRUCTION =======
+const destruction = () => {
+  roids.map((roid) => {
+    // asteriod props
+    const { x, y, r } = roid;
+
+    // lasers
+    ship.lasers.map((laser) => {
+      if (dist(laser.x, laser.y, x, y) < r) {
+        removeLaser(laser);
+        roids = roids.filter((r) => r != roid);
+      }
+    });
+  });
+};
+const removeLaser = (laser) => {
+  ship.lasers = ship.lasers.filter((l) => l != laser);
+};
+
 // =========== KEY-CONTROLS ============
 function checkKeys() {
   // left and right
@@ -85,12 +105,13 @@ function checkKeys() {
     ship.rot = ((-TURN_SPEED / 180) * PI) / FPS;
   }
   // thrust
-  if (keyIsDown(UP_ARROW)) {
+  else if (keyIsDown(UP_ARROW)) {
     ship.thrusting = true;
   }
   // for simultaneously shooting while moving
-  if ((key = " ")) {
+  if (keyCode === 32) {
     shootLaser();
+    ship.canShoot = false;
   }
 }
 
@@ -210,6 +231,7 @@ const drawLasers = () => {
     circle(x, y, SHIP_SIZE / 15);
 
     moveLasers(laser);
+    destruction();
   });
   pop();
 };
