@@ -1,17 +1,15 @@
 // SHIP
 var ship;
-
 // set up aestroids
 var roids = [];
-
 var level = 0;
+var Text;
 
 function setup() {
   createCanvas(650, 450);
   H_width = width / 2;
   H_height = height / 2;
   newGame();
-  
 }
 
 function draw() {
@@ -52,4 +50,5 @@ function draw() {
 
   drawLasers();
   if (keyIsPressed && !exploding) checkKeys();
+  drawText();
 }
