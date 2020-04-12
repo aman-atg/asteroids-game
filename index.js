@@ -4,12 +4,14 @@ var ship;
 // set up aestroids
 var roids = [];
 
+var level = 0;
+
 function setup() {
   createCanvas(650, 450);
   H_width = width / 2;
   H_height = height / 2;
-  ship = newAirship();
-  createAsteroidBelt();
+  newGame();
+  
 }
 
 function draw() {
