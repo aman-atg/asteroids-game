@@ -5,6 +5,7 @@ var roids = [];
 var level = 0;
 var lives = GAME_LIVES;
 var Text;
+var score = 0;
 // var pause = false;
 
 function setup() {

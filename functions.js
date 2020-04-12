@@ -20,23 +20,28 @@ const gameOver = () => {
 
 // ===== DRAW TEXT ======
 const drawText = (e) => {
+  var textColor = color(255, 255, 255);
+  // score
+  push();
+  noStroke();
+  fill(textColor);
+  textSize(38);
+  textAlign(RIGHT, CENTER);
+  text(score, width - SHIP_SIZE / 2, SHIP_SIZE);
+
+  // game instructions
   if (textOpc >= 0) {
-    push();
-    noStroke();
-    var textColor = color(255, 255, 255);
-    textSize(38);
     textAlign(CENTER, CENTER);
     textColor.setAlpha(textOpc);
-    fill(textColor);
     text(Text, H_width, H_height * 0.33);
     textOpc -= 255 / TEXT_FADE_TIME / FPS;
-    pop();
   } else if (ship.dead) {
     lives = 3;
     level = 0;
     roids = [];
     newGame();
   }
+  pop();
 
   var lifeColor;
   for (var i = 0; i < lives; i++) {
@@ -153,15 +158,20 @@ const destroyAsteroid = (roid) => {
   if (r === ceil(R)) {
     roids.push(newAsteroid(x, y, ceil(R / 2)));
     roids.push(newAsteroid(x, y, ceil(R / 2)));
+    score += ROIDS_PTS_LRG;
   } else if (r === ceil(R / 2)) {
     roids.push(newAsteroid(x, y, ceil(R / 4)));
     roids.push(newAsteroid(x, y, ceil(R / 4)));
+    score += ROIDS_PTS_MED;
   }
+  score += ROIDS_PTS_SML;
   // destory it
   roids = roids.filter((r) => r != roid);
-  if (roids.length === 0 && ship.explodeTime == 0) {
+  if (roids.length === 0) {
     level++;
-    newGame();
+    setTimeout(() => {
+      newGame();
+    }, ship.explodeTime * 1000);
   }
 };
 
