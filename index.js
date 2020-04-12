@@ -5,6 +5,7 @@ var roids = [];
 var level = 0;
 var lives = GAME_LIVES;
 var Text;
+// var pause = false;
 
 function setup() {
   createCanvas(650, 450);
@@ -21,7 +22,7 @@ function draw() {
   strokeWeight(1.5);
   stroke(255);
 
-  if (ship.thrusting) {
+  if (ship.thrusting && !ship.dead) {
     if (blinking) drawThruster();
 
     ship.thrust.x += (SHIP_THRUST * cos(ship.a)) / FPS;
@@ -31,7 +32,8 @@ function draw() {
     ship.thrust.y -= (FRICTION * ship.thrust.y) / FPS;
   }
   if (!exploding) {
-    if (blinking) drawAirship(ship.x, ship.y, ship.a);
+    if (blinking && !ship.dead) drawAirship(ship.x, ship.y, ship.a);
+    // if (!pause)
     moveShip();
   } else {
     drawExplosion();
@@ -45,14 +47,16 @@ function draw() {
   }
 
   ship.explodeTime--;
-  if (ship.explodeTime == 0) {
+  if (ship.explodeTime == 0 && !ship.dead) {
     lives--;
     if (lives === 0) gameOver();
-    ship = newAirship();
+    else ship = newAirship();
   }
+
   handleAsteroids(exploding);
 
   drawLasers();
-  if (keyIsPressed && !exploding) checkKeys();
-  drawText();
+
+  if (keyIsPressed && !exploding && !ship.dead) checkKeys();
+  drawText(exploding);
 }

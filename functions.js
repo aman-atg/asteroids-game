@@ -3,15 +3,23 @@ const newGame = () => {
   ship = newAirship();
   newLevel();
 };
+// ===== NEW LEVEL =====
 
 const newLevel = () => {
-  Level = "Level " + (level + 1);
+  Text = "Level " + (level + 1);
   textOpc = 255;
   createAsteroidBelt();
 };
 
+// ===== GAME OVER ======
+const gameOver = () => {
+  ship.dead = true;
+  Text = "Game Over";
+  textOpc = 255;
+};
+
 // ===== DRAW TEXT ======
-const drawText = () => {
+const drawText = (e) => {
   if (textOpc >= 0) {
     push();
     noStroke();
@@ -20,12 +28,18 @@ const drawText = () => {
     textAlign(CENTER, CENTER);
     textColor.setAlpha(textOpc);
     fill(textColor);
-    text(Level, H_width, H_height * 0.33);
+    text(Text, H_width, H_height * 0.33);
     textOpc -= 255 / TEXT_FADE_TIME / FPS;
     pop();
+  } else if (ship.dead) {
+    newGame();
+    lives = 3;
   }
+
+  var lifeColor;
   for (var i = 0; i < lives; i++) {
-    drawAirship(SHIP_SIZE + i * SHIP_SIZE * 1.2, SHIP_SIZE, HALF_PI);
+    lifeColor = e && i == lives - 1 ? "red" : "white";
+    drawAirship(SHIP_SIZE + i * SHIP_SIZE * 1.2, SHIP_SIZE, HALF_PI, lifeColor);
   }
 };
 
@@ -38,6 +52,7 @@ const newAirship = () => ({
   blinkNum: SHIP_INV_DUR / SHIP_BLINK_DUR,
   blinkTime: ceil(SHIP_BLINK_DUR * FPS),
   canShoot: true,
+  dead: false,
   explodeTime: 0,
   lasers: [],
   rot: 0,
@@ -95,7 +110,6 @@ const moveLasers = (laser) => {
     return;
   }
 
-  // ship.lasers.pop(laser);
   laser.x += xv;
   laser.y += yv;
 
@@ -238,8 +252,9 @@ const handleAsteroids = (e) => {
 // ================== >> DRAWING FUNCTIONS << ==================
 
 // ====== DRAW AIRSHIP ======
-const drawAirship = (x, y, a) => {
+const drawAirship = (x, y, a, color = "white") => {
   const { r } = ship;
+  stroke(color);
   triangle(
     //nose of the ship
     x + (4 / 3) * r * cos(a),
@@ -287,6 +302,7 @@ const drawLasers = () => {
       if (laser.explodeTime == 0) removeLaser(laser);
     } else {
       circle(x, y, SHIP_SIZE / 15);
+      // if (!pause)
       moveLasers(laser);
     }
 
@@ -358,7 +374,8 @@ const drawAsteroids = (exploding) => {
     if (
       dist(x, y, ship.x, ship.y) < ship.r + r &&
       !exploding &&
-      ship.blinkNum == 0
+      ship.blinkNum == 0 &&
+      !ship.dead
     ) {
       explodeShip();
       destroyAsteroid(roid);
@@ -366,6 +383,7 @@ const drawAsteroids = (exploding) => {
     }
 
     // move 'em
+    // if (!pause)
     moveAsteroids(roid);
   });
   pop();
