@@ -1,3 +1,4 @@
+// ===== START NEW GAME ======
 const newGame = () => {
   ship = newAirship();
   newLevel();
@@ -6,11 +7,10 @@ const newGame = () => {
 const newLevel = () => {
   Level = "Level " + (level + 1);
   textOpc = 255;
-
   createAsteroidBelt();
 };
 
-//////////
+// ===== DRAW TEXT ======
 const drawText = () => {
   if (textOpc >= 0) {
     push();
@@ -24,9 +24,10 @@ const drawText = () => {
     textOpc -= 255 / TEXT_FADE_TIME / FPS;
     pop();
   }
+  for (var i = 0; i < lives; i++) {
+    drawAirship(SHIP_SIZE + i * SHIP_SIZE * 1.2, SHIP_SIZE, HALF_PI);
+  }
 };
-
-///////
 
 // ======== MAKING NEW AIRSHIP =========
 const newAirship = () => ({
@@ -237,17 +238,18 @@ const handleAsteroids = (e) => {
 // ================== >> DRAWING FUNCTIONS << ==================
 
 // ====== DRAW AIRSHIP ======
-const drawAirship = () => {
+const drawAirship = (x, y, a) => {
+  const { r } = ship;
   triangle(
     //nose of the ship
-    ship.x + (4 / 3) * ship.r * cos(ship.a),
-    ship.y - (4 / 3) * ship.r * sin(ship.a),
+    x + (4 / 3) * r * cos(a),
+    y - (4 / 3) * r * sin(a),
     // rear left
-    ship.x - ship.r * ((2 / 3) * cos(ship.a) + sin(ship.a)),
-    ship.y + ship.r * ((2 / 3) * sin(ship.a) - cos(ship.a)),
+    x - r * ((2 / 3) * cos(a) + sin(a)),
+    y + r * ((2 / 3) * sin(a) - cos(a)),
     // rear right
-    ship.x - ship.r * ((2 / 3) * cos(ship.a) - sin(ship.a)),
-    ship.y + ship.r * ((2 / 3) * sin(ship.a) + cos(ship.a))
+    x - r * ((2 / 3) * cos(a) - sin(a)),
+    y + r * ((2 / 3) * sin(a) + cos(a))
   );
 };
 
