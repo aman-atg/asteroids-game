@@ -4,8 +4,29 @@ const newGame = () => {
 };
 
 const newLevel = () => {
+  Level = "Level " + (level + 1);
+  textOpc = 255;
+
   createAsteroidBelt();
 };
+
+//////////
+const drawText = () => {
+  if (textOpc >= 0) {
+    push();
+    noStroke();
+    var textColor = color(255, 255, 255);
+    textSize(38);
+    textAlign(CENTER, CENTER);
+    textColor.setAlpha(textOpc);
+    fill(textColor);
+    text(Level, H_width, H_height * 0.33);
+    textOpc -= 255 / TEXT_FADE_TIME / FPS;
+    pop();
+  }
+};
+
+///////
 
 // ======== MAKING NEW AIRSHIP =========
 const newAirship = () => ({
@@ -121,7 +142,7 @@ const destroyAsteroid = (roid) => {
   }
   // destory it
   roids = roids.filter((r) => r != roid);
-  if (roids.length === 0){
+  if (roids.length === 0) {
     level++;
     newGame();
   }
