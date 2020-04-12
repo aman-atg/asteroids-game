@@ -3,6 +3,7 @@ var ship;
 // set up aestroids
 var roids = [];
 var level = 0;
+var lives = GAME_LIVES;
 var Text;
 
 function setup() {
@@ -30,7 +31,7 @@ function draw() {
     ship.thrust.y -= (FRICTION * ship.thrust.y) / FPS;
   }
   if (!exploding) {
-    if (blinking) drawAirship();
+    if (blinking) drawAirship(ship.x,ship.y,ship.a);
     moveShip();
   } else {
     drawExplosion();
