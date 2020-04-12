@@ -31,7 +31,7 @@ function draw() {
     ship.thrust.y -= (FRICTION * ship.thrust.y) / FPS;
   }
   if (!exploding) {
-    if (blinking) drawAirship(ship.x,ship.y,ship.a);
+    if (blinking) drawAirship(ship.x, ship.y, ship.a);
     moveShip();
   } else {
     drawExplosion();
@@ -45,8 +45,11 @@ function draw() {
   }
 
   ship.explodeTime--;
-  if (ship.explodeTime == 0) ship = newAirship();
-
+  if (ship.explodeTime == 0) {
+    lives--;
+    if (lives === 0) gameOver();
+    ship = newAirship();
+  }
   handleAsteroids(exploding);
 
   drawLasers();
