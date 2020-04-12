@@ -32,8 +32,10 @@ const drawText = (e) => {
     textOpc -= 255 / TEXT_FADE_TIME / FPS;
     pop();
   } else if (ship.dead) {
-    newGame();
     lives = 3;
+    level = 0;
+    roids = [];
+    newGame();
   }
 
   var lifeColor;
@@ -157,7 +159,7 @@ const destroyAsteroid = (roid) => {
   }
   // destory it
   roids = roids.filter((r) => r != roid);
-  if (roids.length === 0) {
+  if (roids.length === 0 && ship.explodeTime == 0) {
     level++;
     newGame();
   }
