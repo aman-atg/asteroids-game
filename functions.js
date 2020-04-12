@@ -1,3 +1,12 @@
+const newGame = () => {
+  ship = newAirship();
+  newLevel();
+};
+
+const newLevel = () => {
+  createAsteroidBelt();
+};
+
 // ======== MAKING NEW AIRSHIP =========
 const newAirship = () => ({
   x: H_width,
@@ -112,6 +121,10 @@ const destroyAsteroid = (roid) => {
   }
   // destory it
   roids = roids.filter((r) => r != roid);
+  if (roids.length === 0){
+    level++;
+    newGame();
+  }
 };
 
 // =========== KEY-CONTROLS ============
@@ -146,7 +159,7 @@ function keyReleased() {
 // ======= CREATE ASTROID-BELT =======
 const createAsteroidBelt = () => {
   var x, y;
-  for (var i = 0; i < ASTEROIDS_NUM; i++) {
+  for (var i = 0; i < ASTEROIDS_NUM + ceil(level * 1.33); i++) {
     do {
       x = floor(random() * width);
       y = floor(random() * height);
@@ -157,11 +170,12 @@ const createAsteroidBelt = () => {
 };
 // ====== CREATE ONE ASTROID =====
 const newAsteroid = (x, y, r) => {
+  var spdInc = 1 + 0.1 * level;
   var roid = {
     x,
     y,
-    xv: (random(ROIDS_SPD) / FPS) * (random() < 0.5 ? 1 : -1),
-    yv: (random(ROIDS_SPD) / FPS) * (random() < 0.5 ? 1 : -1),
+    xv: (random(ROIDS_SPD) / FPS) * spdInc * (random() < 0.5 ? 1 : -1),
+    yv: (random(ROIDS_SPD) / FPS) * spdInc * (random() < 0.5 ? 1 : -1),
     r,
     a: random(PI * 2),
     vert: random(ROIDS_VERT) + 1 + ROIDS_VERT / 2,
@@ -270,7 +284,7 @@ const laserExplosion = (laser) => {
   fill("salmon");
   circle(x, y, r * 1.15);
   fill("pink");
-  circle(x, y, r * .75);
+  circle(x, y, r * 0.75);
 
   pop();
 };
