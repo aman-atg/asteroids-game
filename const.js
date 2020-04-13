@@ -1,5 +1,5 @@
-const ASTEROIDS_NUM = 13;
-const GAME_LIVES = 1;
+const ASTEROIDS_NUM = 2;
+const GAME_LIVES = 3;
 const FPS = 100;
 const FRICTION = 0.7;
 const LASER_DIST = 0.6;
