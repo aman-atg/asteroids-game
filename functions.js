@@ -17,26 +17,37 @@ const gameOver = () => {
   ship.dead = true;
   Text = "Game Over";
   textOpc = 255;
-  score=0;
+  score = 0;
   // stop();
 };
 
 // ===== DRAW TEXT ======
 const drawText = (e) => {
   var textColor = color(255, 255, 255);
-  // score
+
   push();
   noStroke();
   fill(textColor);
-  textSize(38);
+  if (Text === "Game Over") textSize(TEXT_SIZE * 1.5);
+  else textSize(TEXT_SIZE);
+  //high score
+  push();
+  textAlign(CENTER, CENTER);
+  textSize(TEXT_SIZE * 0.75);
+  text(scoreHigh, H_width, SHIP_SIZE);
+
+  pop();
+
+  // score
   textAlign(RIGHT, CENTER);
   if (lives !== 0) text(score, width - SHIP_SIZE / 2, SHIP_SIZE);
   // game instructions
   if (textOpc >= 0) {
     textAlign(CENTER, CENTER);
     textColor.setAlpha(textOpc);
-    text(Text, H_width, H_height * 0.33);
     textOpc -= 255 / TEXT_FADE_TIME / FPS;
+    fill(textColor);
+    text(Text, H_width, H_height * 0.33);
   } else if (ship.dead) {
     lives = 3;
     level = 0;
@@ -47,7 +58,7 @@ const drawText = (e) => {
 
   var lifeColor;
   for (var i = 0; i < lives; i++) {
-    lifeColor = e && i == lives - 1 ? "red" : "white";
+    lifeColor = e && i === lives - 1 ? "red" : "white";
     drawAirship(SHIP_SIZE + i * SHIP_SIZE * 1.2, SHIP_SIZE, HALF_PI, lifeColor);
   }
 };

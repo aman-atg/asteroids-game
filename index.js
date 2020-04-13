@@ -1,3 +1,4 @@
+ 
 // SHIP
 var ship;
 // set up aestroids
@@ -6,6 +7,7 @@ var level = 0;
 var lives = GAME_LIVES;
 var Text;
 var score = 0;
+var scoreHigh;
 // var pause = false;
 
 function setup() {
@@ -59,5 +61,8 @@ function draw() {
   drawLasers();
 
   if (keyIsPressed && !exploding && !ship.dead) checkKeys();
+
   drawText(exploding);
 }
+
+ 
