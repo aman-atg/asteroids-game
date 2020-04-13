@@ -1,4 +1,4 @@
-const ASTEROIDS_NUM = 2;
+const ASTEROIDS_NUM = 3;
 const GAME_LIVES = 3;
 const FPS = 100;
 const FRICTION = 0.7;

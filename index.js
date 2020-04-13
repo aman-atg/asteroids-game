@@ -10,7 +10,7 @@ var highScore;
 // var pause = false;
 
 function setup() {
-  createCanvas(650, 450);
+  createCanvas(windowWidth, windowHeight);
 
   H_width = width / 2;
   H_height = height / 2;
