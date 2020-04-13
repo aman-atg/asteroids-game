@@ -1,4 +1,3 @@
- 
 // SHIP
 var ship;
 // set up aestroids
@@ -7,11 +6,12 @@ var level = 0;
 var lives = GAME_LIVES;
 var Text;
 var score = 0;
-var scoreHigh;
+var highScore;
 // var pause = false;
 
 function setup() {
   createCanvas(650, 450);
+
   H_width = width / 2;
   H_height = height / 2;
   newGame();
@@ -64,5 +64,3 @@ function draw() {
 
   drawText(exploding);
 }
-
- 

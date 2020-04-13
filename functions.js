@@ -1,6 +1,26 @@
+function lsTest() {
+  var test = "test";
+  try {
+    localStorage.setItem(test, test);
+    localStorage.removeItem(test);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 // ===== START NEW GAME ======
 const newGame = () => {
   ship = newAirship();
+
+  if (lsTest()) {
+    var scoreStr = localStorage.getItem(HIGHSCORE_KEY);
+    if (scoreStr == null) highScore = 0;
+    else highScore = parseInt(scoreStr);
+  } else {
+    print("fdsk");
+  }
+  //get the high score from local storage
   newLevel();
 };
 // ===== NEW LEVEL =====
@@ -34,7 +54,9 @@ const drawText = (e) => {
   push();
   textAlign(CENTER, CENTER);
   textSize(TEXT_SIZE * 0.75);
-  text(scoreHigh, H_width, SHIP_SIZE);
+
+  if (highScore === undefined) highScore = 0;
+  text("BEST " + highScore, H_width, SHIP_SIZE);
 
   pop();
 
@@ -47,7 +69,7 @@ const drawText = (e) => {
     textColor.setAlpha(textOpc);
     textOpc -= 255 / TEXT_FADE_TIME / FPS;
     fill(textColor);
-    text(Text, H_width, H_height * 0.33);
+    text(Text, H_width, height * 0.73);
   } else if (ship.dead) {
     lives = 3;
     level = 0;
@@ -178,6 +200,10 @@ const destroyAsteroid = (roid) => {
     score += ROIDS_PTS_MED;
   }
   score += ROIDS_PTS_SML;
+  if (score > highScore) {
+    highScore = score;
+    if (lsTest()) localStorage.setItem(HIGHSCORE_KEY, highScore);
+  }
   // destory it
   roids = roids.filter((r) => r != roid);
   if (roids.length === 0) {
