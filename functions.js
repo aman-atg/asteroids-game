@@ -9,6 +9,7 @@ const newLevel = () => {
   Text = "Level " + (level + 1);
   textOpc = 255;
   createAsteroidBelt();
+  if (lives === 0) score = 0;
 };
 
 // ===== GAME OVER ======
@@ -16,6 +17,8 @@ const gameOver = () => {
   ship.dead = true;
   Text = "Game Over";
   textOpc = 255;
+  score=0;
+  // stop();
 };
 
 // ===== DRAW TEXT ======
@@ -27,8 +30,7 @@ const drawText = (e) => {
   fill(textColor);
   textSize(38);
   textAlign(RIGHT, CENTER);
-  text(score, width - SHIP_SIZE / 2, SHIP_SIZE);
-
+  if (lives !== 0) text(score, width - SHIP_SIZE / 2, SHIP_SIZE);
   // game instructions
   if (textOpc >= 0) {
     textAlign(CENTER, CENTER);
@@ -169,9 +171,11 @@ const destroyAsteroid = (roid) => {
   roids = roids.filter((r) => r != roid);
   if (roids.length === 0) {
     level++;
-    setTimeout(() => {
-      newGame();
-    }, ship.explodeTime * 1000);
+    if (lives === 1) {
+      setTimeout(() => {
+        newGame();
+      }, ship.explodeTime * 1000);
+    } else newGame();
   }
 };
 
