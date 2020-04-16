@@ -1,7 +1,7 @@
 # Asteroids Game 
 
  
-![Game-Play](./atariGame.webm)
+![Game-Play](./atariGame1.gif)
 
 ## Prerequisites
 
