@@ -42,3 +42,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 
 * [Original Asteroids Game](https://en.wikipedia.org/wiki/Asteroids_(video_game))
 * [FCC-YOUTUBE](https://www.youtube.com/watch?v=H9CSWMxJx84)
+* [Fighter jet Icon](https://iconscout.com/icons/fighter-jet") by [Iconscout](https://iconscout.com/contributors/iconscout)
+
