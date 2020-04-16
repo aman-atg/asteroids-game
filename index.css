@@ -8,15 +8,28 @@ body {
   overflow: hidden;
   display: flex;
   justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #137547;
 }
-.footer {
-  position: absolute;
-  bottom: -10px;
-  font-size: 18px;
-  /* color: white; */
+p {
+  display: inline;
 }
 
 a,
 a:visited {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0px;
+  font-size: 18px;
+}
+.fa-heart {
   color: red;
+}
+.fa-mug-hot {
+  color: brown;
 }
