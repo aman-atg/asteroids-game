@@ -42,7 +42,7 @@ const gameOver = () => {
 };
 
 // ===== DRAW TEXT ======
-const drawText = (e) => {
+const drawText = e => {
   var textColor = color(255, 255, 255);
 
   push();
@@ -143,7 +143,7 @@ const shootLaser = () => {
 };
 
 // ====== MOVE LASERS =======
-const moveLasers = (laser) => {
+const moveLasers = laser => {
   const { x, y, xv, yv, dist } = laser;
 
   // remove lasers after travelling a certain distance
@@ -167,12 +167,12 @@ const moveLasers = (laser) => {
 
 // ====== DESTRUCTION =======
 const destruction = () => {
-  roids.map((roid) => {
+  roids.map(roid => {
     // asteriod props
     const { x, y, r } = roid;
 
     // lasers
-    ship.lasers.map((laser) => {
+    ship.lasers.map(laser => {
       if (laser.explodeTime == 0 && dist(laser.x, laser.y, x, y) < r) {
         destroyAsteroid(roid);
         laser.explodeTime = ceil(LASER_EXPLODE_DUR * FPS);
@@ -180,15 +180,16 @@ const destruction = () => {
     });
   });
 };
-const removeLaser = (laser) => {
-  ship.lasers = ship.lasers.filter((l) => l != laser);
+const removeLaser = laser => {
+  ship.lasers = ship.lasers.filter(l => l != laser);
 };
 
 // ====== DESTROY ASTEROIDS =======
-const destroyAsteroid = (roid) => {
+const destroyAsteroid = roid => {
   var { x, y, r } = roid;
   const R = ROIDS_SIZE / 2;
 
+  hit_S.play();
   // split the asteroid in two
   if (r === ceil(R)) {
     roids.push(newAsteroid(x, y, ceil(R / 2)));
@@ -205,13 +206,13 @@ const destroyAsteroid = (roid) => {
     if (lsTest()) localStorage.setItem(HIGHSCORE_KEY, highScore);
   }
   // destory it
-  roids = roids.filter((r) => r != roid);
+  roids = roids.filter(r => r != roid);
   if (roids.length === 0) {
     level++;
     // if (lives === 1) {
-      setTimeout(() => {
-        newGame();
-      },  1000);
+    setTimeout(() => {
+      newGame();
+    }, 1000);
     // } else newGame();
   }
 };
@@ -231,6 +232,8 @@ function checkKeys() {
   // for simultaneously shooting while moving
   if (keyCode === 32) {
     shootLaser();
+    laser_S.play();
+
     ship.canShoot = false;
   }
 }
@@ -243,6 +246,12 @@ function keyReleased() {
   if (keyCode === 38) ship.thrusting = false;
 
   if (keyCode === 32) ship.canShoot = true;
+
+  if (keyCode === ENTER) {
+    print("ok");
+    noSound = !noSound;
+    controlSound(noSound);
+  }
 }
 
 // ======= CREATE ASTROID-BELT =======
@@ -257,6 +266,25 @@ const createAsteroidBelt = () => {
     roids.push(newAsteroid(x, y, ceil(ROIDS_SIZE / 2)));
   }
 };
+
+controlSound = noSound => {
+  if (noSound) {
+    explode_S = createAudio("./../../public/sounds/silent.mp3");
+    hit_S = createAudio("./../../public/sounds/silent.mp3");
+    laser_S = createAudio("./../../public/sounds/silent.mp3");
+    music_high_S = createAudio("./../../public/sounds/silent.mp3");
+    music_low_S = createAudio("./../../public/sounds/silent.mp3");
+    thrust_S = createAudio("./../../public/sounds/silent.mp3");
+  } else {
+    explode_S = createAudio("./../../public/sounds/explode.m4a");
+    hit_S = createAudio("./../../public/sounds/hit.m4a");
+    laser_S = createAudio("./../../public/sounds/laser.m4a");
+    music_high_S = createAudio("./../../public/sounds/music-high.m4a");
+    music_low_S = createAudio("./../../public/sounds/music-low.m4a");
+    thrust_S = createAudio("./../../public/sounds/thrust.m4a");
+  }
+};
+
 // ====== CREATE ONE ASTROID =====
 const newAsteroid = (x, y, r) => {
   var spdInc = 1 + 0.1 * level;
@@ -278,7 +306,7 @@ const newAsteroid = (x, y, r) => {
 };
 
 // ======= MOVE ASTEROIDS =========
-const moveAsteroids = (roid) => {
+const moveAsteroids = roid => {
   var { xv, yv, x, y, r } = roid;
 
   roid.x += xv;
@@ -299,7 +327,7 @@ const moveAsteroids = (roid) => {
 };
 
 // ======= HANDLE ASTEROIDS =========
-const handleAsteroids = (e) => {
+const handleAsteroids = e => {
   drawAsteroids(e);
 };
 // ================== >> DRAWING FUNCTIONS << ==================
@@ -346,7 +374,7 @@ const drawLasers = () => {
   push();
   fill("salmon");
 
-  ship.lasers.map((laser) => {
+  ship.lasers.map(laser => {
     const { x, y } = laser;
 
     if (laser.explodeTime > 0) {
@@ -366,7 +394,7 @@ const drawLasers = () => {
 
 // ====== LASER-EXPLOSION =======
 
-const laserExplosion = (laser) => {
+const laserExplosion = laser => {
   const { x, y } = laser;
   const { r } = ship;
   push();
@@ -403,12 +431,12 @@ const drawExplosion = () => {
 };
 
 // ====== DRAW ASTEROIDS =======
-const drawAsteroids = (exploding) => {
+const drawAsteroids = exploding => {
   push();
   strokeWeight(SHIP_SIZE / 20);
   stroke("slategrey");
 
-  roids.map((roid) => {
+  roids.map(roid => {
     // getting all variables from roid
     const { x, y, r, a, vert, offs } = roid;
 

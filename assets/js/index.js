@@ -8,9 +8,22 @@ var Text;
 var score = 0;
 var highScore;
 // var pause = false;
+var noSound = true;
+
+let explode_S, hit_S, laser_S, music_high_S, music_low_S, thrust_S;
+
+function preload() {
+    explode_S = createAudio("./../../public/sounds/explode.m4a");
+    hit_S = createAudio("./../../public/sounds/hit.m4a");
+    laser_S = createAudio("./../../public/sounds/laser.m4a");
+    music_high_S = createAudio("./../../public/sounds/music-high.m4a");
+    music_low_S = createAudio("./../../public/sounds/music-low.m4a");
+    thrust_S = createAudio("./../../public/sounds/thrust.m4a");
+ 
+}
 
 function setup() {
-  createCanvas(windowWidth, windowHeight-25);
+  createCanvas(windowWidth, windowHeight - 25);
 
   H_width = width / 2;
   H_height = height / 2;
@@ -27,7 +40,7 @@ function draw() {
 
   if (ship.thrusting && !ship.dead) {
     if (blinking) drawThruster();
-
+    thrust_S.play();
     ship.thrust.x += (SHIP_THRUST * cos(ship.a)) / FPS;
     ship.thrust.y -= (SHIP_THRUST * sin(ship.a)) / FPS;
   } else {
@@ -39,6 +52,7 @@ function draw() {
     // if (!pause)
     moveShip();
   } else {
+    explode_S.play();
     drawExplosion();
   }
   if (ship.blinkNum > 0) {
