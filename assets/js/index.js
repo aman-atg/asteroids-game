@@ -13,16 +13,16 @@ var noSound = false;
 let explode_S, laser_S, music_high_S, music_low_S, thrust_S;
 
 function preload() {
-  explode_S = loadSound("./../../public/sounds/explode.m4a");
+  explode_S = loadSound("./../../public/sounds/Explosion+1.mp3");
   hit_S = loadSound("./../../public/sounds/hit.m4a");
   laser_S = loadSound("./../../public/sounds/laser.m4a");
     music_high_S = loadSound("./../../public/sounds/music-high.m4a");
     music_low_S = loadSound("./../../public/sounds/music-low.m4a");
     thrust_S = loadSound("./../../public/sounds/thrust.m4a");
-
+ 
     laser_S.playMode('sustain')
-    laser_S.setVolume(1);
-
+    laser_S.setVolume(.5);
+    explode_S.setVolume(.5);
  
 }
 
