@@ -29,7 +29,7 @@ a:visited {
   position: absolute;
   width: 30px;
   top: 72%;
-  right: .5%;
+  right: 0.5%;
 }
 .hide {
   display: none;
@@ -37,22 +37,34 @@ a:visited {
 
 .info:hover + .instructions {
   /* height: calc(100%0px); */
+  padding: 20px 40px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  right: 0;
-  top: 55%;
+  right: 2%;
+  gap: 30px;
+  top: 45%;
   width: 250px;
+  border-radius: 30px;
   /* vertical-align: center; */
-  background-color: white;
+  background-color: #0c3747;
   position: absolute;
-  color: pink;
+  color: #bfc0c0;
 }
-
+.instructions h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
 .ctrl {
   display: flex;
   justify-content: space-between;
 }
-
+.enter {
+  /* width: 45px; */
+  fill: white;
+  stroke: yellow;
+  stroke-width: 30px;
+}
 img {
   width: 25px;
 }
@@ -66,5 +78,5 @@ img {
   color: rgb(255, 0, 0);
 }
 .fa-mug-hot {
-  color:rgb(145, 0, 0);
+  color: rgb(145, 0, 0);
 }
