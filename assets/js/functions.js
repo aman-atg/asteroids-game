@@ -130,6 +130,8 @@ const explodeShip = () => {
 // ====== SHOOT LASERS =======
 const shootLaser = () => {
   if (ship.canShoot && ship.lasers.length < LASER_MAX) {
+    laser_S.play();
+
     ship.lasers.push({
       x: ship.x + (4 / 3) * ship.r * cos(ship.a),
       y: ship.y - (4 / 3) * ship.r * sin(ship.a),
@@ -228,12 +230,14 @@ function checkKeys() {
   // thrust
   else if (keyIsDown(UP_ARROW)) {
     ship.thrusting = true;
+
+    print("thrusting")
+
+
   }
   // for simultaneously shooting while moving
   if (keyCode === 32) {
     shootLaser();
-    laser_S.play();
-
     ship.canShoot = false;
   }
 }
@@ -243,7 +247,13 @@ function keyReleased() {
   //when left and right keys are released, rotation should be 0
   if (keyCode === 37 || keyCode === 39) ship.rot = 0;
   //when up is released, thrust should be 0
-  if (keyCode === 38) ship.thrusting = false;
+  if (keyCode ===38){
+    ship.thrusting = false;
+    // thrust_S.playMode("sustain")
+    print("puaese")
+    
+
+  }
 
   if (keyCode === 32) ship.canShoot = true;
 
@@ -269,19 +279,11 @@ const createAsteroidBelt = () => {
 
 controlSound = noSound => {
   if (noSound) {
-    explode_S = createAudio("./../../public/sounds/silent.mp3");
-    hit_S = createAudio("./../../public/sounds/silent.mp3");
-    laser_S = createAudio("./../../public/sounds/silent.mp3");
-    music_high_S = createAudio("./../../public/sounds/silent.mp3");
-    music_low_S = createAudio("./../../public/sounds/silent.mp3");
-    thrust_S = createAudio("./../../public/sounds/silent.mp3");
+    masterVolume(0);
+    
   } else {
-    explode_S = createAudio("./../../public/sounds/explode.m4a");
-    hit_S = createAudio("./../../public/sounds/hit.m4a");
-    laser_S = createAudio("./../../public/sounds/laser.m4a");
-    music_high_S = createAudio("./../../public/sounds/music-high.m4a");
-    music_low_S = createAudio("./../../public/sounds/music-low.m4a");
-    thrust_S = createAudio("./../../public/sounds/thrust.m4a");
+    masterVolume(1);
+    
   }
 };
 
@@ -351,6 +353,7 @@ const drawAirship = (x, y, a, color = "white") => {
 
 // ====== DRAW THRUSTER =======
 const drawThruster = () => {
+
   push();
   fill("red");
   stroke("yellow");
