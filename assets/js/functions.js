@@ -230,10 +230,6 @@ function checkKeys() {
   // thrust
   else if (keyIsDown(UP_ARROW)) {
     ship.thrusting = true;
-
-    print("thrusting")
-
-
   }
   // for simultaneously shooting while moving
   if (keyCode === 32) {
@@ -247,12 +243,8 @@ function keyReleased() {
   //when left and right keys are released, rotation should be 0
   if (keyCode === 37 || keyCode === 39) ship.rot = 0;
   //when up is released, thrust should be 0
-  if (keyCode ===38){
+  if (keyCode === 38) {
     ship.thrusting = false;
-    // thrust_S.playMode("sustain")
-    print("puaese")
-    
-
   }
 
   if (keyCode === 32) ship.canShoot = true;
@@ -280,10 +272,8 @@ const createAsteroidBelt = () => {
 controlSound = noSound => {
   if (noSound) {
     masterVolume(0);
-    
   } else {
     masterVolume(1);
-    
   }
 };
 
@@ -353,7 +343,6 @@ const drawAirship = (x, y, a, color = "white") => {
 
 // ====== DRAW THRUSTER =======
 const drawThruster = () => {
-
   push();
   fill("red");
   stroke("yellow");
