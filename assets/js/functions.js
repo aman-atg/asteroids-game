@@ -20,7 +20,7 @@ const newGame = () => {
   } else {
     print("fdsk");
   }
-  //get the high score from local storage
+
   newLevel();
 };
 // ===== NEW LEVEL =====
@@ -29,7 +29,7 @@ const newLevel = () => {
   Text = "Level " + (level + 1);
   textOpc = 255;
   createAsteroidBelt();
-  if (lives === 0) score = 0;
+  if (lives === 0) gameOver();
 };
 
 // ===== GAME OVER ======
@@ -208,11 +208,11 @@ const destroyAsteroid = (roid) => {
   roids = roids.filter((r) => r != roid);
   if (roids.length === 0) {
     level++;
-    if (lives === 1) {
+    // if (lives === 1) {
       setTimeout(() => {
         newGame();
-      }, ship.explodeTime * 1000);
-    } else newGame();
+      },  1000);
+    // } else newGame();
   }
 };
 
