@@ -22,6 +22,14 @@ a:visited {
   font-weight: 600;
 }
 
+.instructions {
+  height: 100%;
+  top:50%;
+  /* vertical-align: center; */
+  position: absolute;
+  color: pink;
+}
+
 .footer {
   position: absolute;
   bottom: 0px;
