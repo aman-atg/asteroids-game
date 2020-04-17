@@ -16,19 +16,17 @@ function preload() {
   explode_S = loadSound("./../../public/sounds/Explosion+1.mp3");
   hit_S = loadSound("./../../public/sounds/hit.m4a");
   laser_S = loadSound("./../../public/sounds/laser.m4a");
-    music_high_S = loadSound("./../../public/sounds/music-high.m4a");
-    music_low_S = loadSound("./../../public/sounds/music-low.m4a");
-    thrust_S = loadSound("./../../public/sounds/thrust.m4a");
- 
-    laser_S.playMode('sustain')
-    laser_S.setVolume(.5);
-    explode_S.setVolume(.5);
- 
+  music_high_S = loadSound("./../../public/sounds/music-high.m4a");
+  music_low_S = loadSound("./../../public/sounds/music-low.m4a");
+  thrust_S = loadSound("./../../public/sounds/thrust.m4a");
+  laser_S.playMode("sustain");
+  laser_S.setVolume(0.5);
+  explode_S.setVolume(0.5);
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight - 25);
-// music_low_S.loop(); //wroking fine
+  // music_low_S.loop(); //wroking fine
   H_width = width / 2;
   H_height = height / 2;
   newGame();
@@ -43,14 +41,11 @@ function draw() {
   stroke(255);
 
   if (ship.thrusting && !ship.dead) {
-    if (blinking) 
-    {
-    drawThruster();
-    if(!thrust_S.isPlaying())
-    thrust_S.loop();    
+    if (blinking) {
+      drawThruster();
+      if (!thrust_S.isPlaying()) thrust_S.loop();
     }
 
-  
     ship.thrust.x += (SHIP_THRUST * cos(ship.a)) / FPS;
     ship.thrust.y -= (SHIP_THRUST * sin(ship.a)) / FPS;
   } else {
@@ -89,9 +84,5 @@ function draw() {
   if (keyIsPressed && !exploding && !ship.dead) checkKeys();
 
   drawText(exploding);
-
-  // if(ship.thrusting)    thrust_S.play();
-  // else thrust_S.stop();
-
-
+ 
 }
