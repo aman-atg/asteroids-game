@@ -21,7 +21,7 @@ Or Download and extract the zip file.
 
 ## Running
 
-1. Double-Click on index.html file or Open it with your favourite browser.
+1. Open the index.html file with VS Code's Live Server or Chrome's Live Server Extension
 
 ### Built With
 
